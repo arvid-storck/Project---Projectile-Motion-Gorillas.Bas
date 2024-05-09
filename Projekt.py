@@ -23,7 +23,7 @@ class plot:
 
         self.line.append(line)
         plt.draw()
-        plt.pause(0.1)
+        plt.pause(1)
 
     def addScatter(self,x,y):
         line = self.ax.scatter(x, y)
@@ -46,19 +46,49 @@ class plot:
 #a.addScatter([0,1,2,3],[1,3,1,3])
 #a.addLine([0,1,2,3],[1,3,1,3])
 
-def euler_forward_x(f,v_0,h,T):#Undersskattar värdet!
-    t_n = 0
+
+
+def euler_forward_y(f,t_0,v_0,h,y_0):#Undersskattar värdet!
+    t_n = t_0
     v_n = v_0
-    x_tot = 0
-    h = math.copysign(h,T)
+    
+    integrate = y_0#in
+
+    #Plot stuff
+    t=[t_0]
+    v=[v_0]
+
+    y=[y_0]#in
+
+    i=0#in
+    
+    while integrate>=0:#in
+        v_n = v_n + h * f(v_n,t_n)
+        t_n = t_n + h
+        
+        t.append(t_n)
+        v.append(v_n)
+
+        integrate += h*(v[i+1]+v[i])/2#in
+        i += 1#in
+        y.append(integrate)#in
+
+    return t,v,y
+
+def euler_forward_x(f,t_0,v_0,h,x_0,N):#Undersskattar värdet!
+    t_n = t_0
+    v_n = v_0
+    
+    integrate = 0
     
     #Plot stuff
     t=[0]
     v=[v_0]
-    x=[0]
+    
+    x=[x_0]#in
 
     
-    for i in range(math.ceil(abs(T/h))):
+    for i in range(N-1):
         v_n = v_n + h * f(v_n,t_n)
         t_n = t_n + h
         
@@ -67,48 +97,28 @@ def euler_forward_x(f,v_0,h,T):#Undersskattar värdet!
         v.append(v_n)
 
         
-        x_tot += h*(v[i+1]+v[i])/2
-        x.append(x_tot)
-    return x
-
-def euler_forward_y(f,v_0,h,y_0):#Undersskattar värdet!
-    t_n = 0
-    v_n = v_0
-    y_tot = y_0
-
-    #Plot stuff
-    t=[0]
-    v=[v_0]
-    y=[y_0]
-
-    i=0
-    while y_tot>0:
-        v_n = v_n + h * f(v_n,t_n)
-        t_n = t_n + h
-        
-        #Plot stuff
-        t.append(t_n)
-        v.append(v_n)
-
-        i += 1
-        y_tot += h*(v[i]+v[i-1])/2
-        y.append(y_tot)
-
-    return t_n,y
+        integrate += h*(v[i+1]+v[i])/2#in
+        x.append(integrate)#in
+    return t,v,x
 
 b=float(input("Mål: "))
-a=plot(-b/5,b*1.5,-1,b)
+k=float(input("k: "))
+m=float(input("m: "))
+a=plot(-1,b*1.5,-1,b)
 a.addScatter([b],[0])
 while True:
     vx=float(input("x hastighet: "))
     vy=float(input("y hastighet: "))
     print()
     
-    t,y = euler_forward_y(lambda v,t:-1/1*v-9.82,vy,0.01,2) #-k/m*v-g
+    t,v,y = euler_forward_y((lambda v,t:-k/m*v-9.82),0,vy,0.01,2) #-k/m*v-g
     
-    x = euler_forward_x(lambda v,t:-1*v,vx,0.01,t)# -k/m*v
-    
-    print(len(x),len(y))
+    t,v,x = euler_forward_x((lambda v,t:-k/m*v),0,vx,0.01,0,len(y)) #-k/m*v-g
     
     a.addLine(x,y)
+    
+    hit=2
+    if (b-hit<=x[-2]<=b+hit):
+        print("you win!")
+        break
     
