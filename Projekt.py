@@ -99,7 +99,7 @@ def euler_forward(vx,vy,k,m,h): #Inte för 2.3 men 2.5 funkar
 
 
 
-def gameInit(estimate): #estimate är uppskattningen med estimate(x speed when t=0,y speed when t=0,k,m,steglängd)
+def gameInit(estimate): #estimate är uppskattningen med x,y=estimate(x speed when t=0,y speed when t=0,k,m,steglängd)
     b=float(input("Mål: "))
     k=float(input("k: "))
     m=float(input("m: "))
