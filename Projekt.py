@@ -1,11 +1,12 @@
 import numpy as np
 import matplotlib . pyplot as plt
 import math
+import random
 
 
 class plot:
     def __init__(self,xmin,xmax,ymin,ymax):
-        plt.rcParams['toolbar'] = 'None'
+        #plt.rcParams['toolbar'] = 'None'
         self.fig, self.ax = plt.subplots()
         self.line=[]
         self.ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
@@ -98,36 +99,84 @@ def euler_forward(vx,vy,k,m,h): #Inte för 2.3 men 2.5 funkar
     return x,y
 
 
+def aime(estimate,amplitude,k,m,goal,margin):
+    h=0.01
+    
+    low=0
+    high=90
+    mid=(high+low)/2
+    
+    
+    x_low,y=estimate(amplitude*math.cos(math.radians(low)),amplitude*math.sin(math.radians(low)),k,m,h)
+    x_lowDiff=(x_low[-1]-goal)
+    
+    x_high,y=estimate(amplitude*math.cos(math.radians(high)),amplitude*math.sin(math.radians(high)),k,m,h)
+    x_highDiff=(x_high[-1]-goal)
 
-def gameInit(estimate): #estimate är uppskattningen med x,y=estimate(x speed when t=0,y speed when t=0,k,m,steglängd)
+    if x_lowDiff>=margin and x_lowDiff<=(goal+margin):
+        return high
+    if x_low[-1]>=(goal-margin) and x_low[-1]<=(goal+margin):
+        return low
+
+    #Find positive value for x[-1]-goal
+    
+    i=0
+    while i<40:
+        x_mid,y=estimate(amplitude*math.cos(math.radians(mid)),amplitude*math.sin(math.radians(mid)),k,m,h)
+        x_midDiff=(x_mid[-1]-goal)
+        
+        #testa mid
+        if x_midDiff>-margin and x_midDiff<margin:
+            return mid
+
+        #bifeciton
+        if (x_midDiff)*(x_lowDiff)<0:
+            high=mid
+            x_highDiff=x_midDiff
+        else:
+            low=mid
+            x_lowDiff=x_midDiff
+            
+        mid=(high-low)/2
+        i+=1
+    #Lyckas inte hitta!
+    print("miss!")
+    return random.random()*180
+    
+
+def gameInit(estimate,h): #estimate är uppskattningen med estimate(x speed when t=0,y speed when t=0,k,m,steglängd)
     b=float(input("Mål: "))
     k=float(input("k: "))
     m=float(input("m: "))
     hit=float(input("marginal: "))
-
+    print()
     
     a=plot(-1,b*1.5,-1,b)
     a.addScatter([0],[0])
     a.addLine([-1,b*1.5],[0,0],"black")
     a.addLine([b-hit,b+hit],[0,0],"black",2,[-1,0])
 
-    
     while True:
-        vx=float(input("x hastighet: "))
-        vy=float(input("y hastighet: "))
+        amplitude=float(input("amplitud: "))
+        angel=aime(estimate,amplitude,k,m,b,hit)#estimate,amplitude,k,m,goal,margin
+        print(angel)
+        try:
+            angel=math.radians(angel)
+            #angel=math.radians(float(input("vinkel grader: ")))
+        except:
+            print("Flyttals fel")
+            continue
         print()
-
-        #Sätt x,y uppskattningen här!
-        x,y=estimate(vx,vy,k,m,0.01)
+        
+        x,y=estimate(amplitude*math.cos(angel),amplitude*math.sin(angel),k,m,h)
     
         a.addLine(x,y,"green","x",[-1])
     
-    
         if (b-hit<=x[-1]<=b+hit):
             print("you win!")
-            a.clear()
-            plt.close()
+            #a.clear()
+            #plt.close()
             break
 
-gameInit(euler_forward)
+gameInit(euler_forward,0.001)
     
