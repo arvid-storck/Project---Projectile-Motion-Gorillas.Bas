@@ -76,8 +76,6 @@ def euler_f(v_x,v_y,k,m,t):
 
 def euler_b(v_x,v_y,k,m,t):
     
-    k = 0.1
-    m = 10
     g = 9.8
     
     A = np.array([[-k/m,0,0,0],[0,-k/m,0,0],[1,0,0,0],[0,1,0,0]]) # differentiation matrix
