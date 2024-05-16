@@ -56,7 +56,7 @@ def euler_f(v_x,v_y,k,m,t):
     y_points = np.array([])
     counter = 5
     itera = 0
-    while   state_vector[3] >= 0 :
+    while   state_vector[3] >= -1 :
         itera += 1
         x_points = np.append(x_points,state_vector[2])
 
@@ -178,13 +178,16 @@ def gameInit(estimate,hit,k,m,margins,h): #estimate är uppskattningen med estim
     a.addLine([hit-margins,hit+margins],[0,0],"black",2,[-1,0])
 
     while True:
-        amplitude=float(input("\namplitud: "))
+        #amplitude=float(input("\namplitud: "))
         #angel=aime(estimate,amplitude,k,m,b,hit)#estimate,amplitude,k,m,goal,margin
+        #angel=input("vinkel grader: ")
+        amplitude=input("\namplitud: ")
         angel=input("vinkel grader: ")
         try:
+            amplitude=float(amplitude)
             angel=math.radians(float(angel))
         except:
-            print("Kan inte konvergera",angel,"till en siffra.")
+            print("Kan inte konvergera",angel,"eller",amplitude,"till en siffra.")
             continue
         
         
