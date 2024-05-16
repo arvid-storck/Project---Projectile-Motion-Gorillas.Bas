@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib . pyplot as plt
 import math
-import random
-import numpy
 
 
 class plot:
@@ -53,7 +51,7 @@ def euler_f(v_x,v_y,k,m,t):
     A = np.array([[-k/m,0,0,0],[0,-k/m,0,0],[1,0,0,0],[0,1,0,0]]) # differentiation matrix
     f = np.array([0,-g,0,0])
     state_vector = np.array([v_x,v_y,0,0]) #speed c, speed y, x loc, y loc
-    print(state_vector)
+    #print(state_vector)
     x_points = np.array([])
     y_points = np.array([])
     counter = 5
@@ -69,7 +67,7 @@ def euler_f(v_x,v_y,k,m,t):
                                  [t,0,1,0],
                                  [0,t,0,1]])
         state_vector = np.matmul(euler_matrix,state_vector) + t*f 
-        print(state_vector)
+        #print(state_vector)
         counter = counter -1 
 
     
@@ -85,14 +83,13 @@ def euler_b(v_x,v_y,k,m,t):
     A = np.array([[-k/m,0,0,0],[0,-k/m,0,0],[1,0,0,0],[0,1,0,0]]) # differentiation matrix
     f = np.array([0,-g,0,0])
     state_vector = np.array([v_x,v_y,0,0]) #speed c, speed y, x loc, y loc
-    print(state_vector)
+    #print(state_vector)
     x_points = np.array([])
     y_points = np.array([])
     counter = 5
     itera = 0
-    while   state_vector[3] >= -1 :
+    while   state_vector[3] >= 0 :
         itera += 1
-        t = 0.01
         x_points = np.append(x_points,state_vector[2])
         y_points = np.append(y_points, state_vector[3])
         # This matrix computes euler backward for coordinate and velocity in x,y
@@ -101,7 +98,7 @@ def euler_b(v_x,v_y,k,m,t):
                                  [t/(1+t*k/m),0,1,0],
                                  [0,t/(1+t*k/m),0,1]])
         state_vector = np.matmul(euler_matrix,state_vector) + t*f 
-        print(state_vector)
+        #print(state_vector)
         counter = counter -1 
 
     
@@ -126,7 +123,6 @@ x_1 = x + t * (v_x/(1+t*k/m))
 
 """
 
-#x,y, itera = euler_b(9.8, 9.8)
 
 
 def aime(estimate,amplitude,k,m,goal,margin): #funkar inte
@@ -163,22 +159,28 @@ def aime(estimate,amplitude,k,m,goal,margin): #funkar inte
         i+=1
     #Lyckas inte hitta!
     return None
-    
 
-def gameInit(estimate,h): #estimate är uppskattningen med estimate(x speed when t=0,y speed when t=0,k,m,steglängd)
-    b=float(input("Mål: "))
+def menu():
+    method=int(input("What method? 1 = euler forward, 2= euler backwards:  "))
+    hit=float(input("Mål: "))
     k=float(input("k: "))
     m=float(input("m: "))
-    hit=float(input("marginal: "))
-    print()
+    margins=float(input("marginal: "))
+    if method==1:
+        gameInit(euler_f,hit,k,m,margins,0.01)
+    elif method==2:
+        gameInit(euler_b,hit,k,m,margins,0.01)
     
-    a=plot(-1,b*1.5,-1,b)
+def gameInit(estimate,hit,k,m,margins,h): #estimate är uppskattningen med estimate(x speed when t=0,y speed when t=0,k,m,steglängd)
+
+    
+    a=plot(-1,hit*1.5,-1,hit)
     a.addScatter([0],[0])
-    a.addLine([-1,b*1.5],[0,0],"black")
-    a.addLine([b-hit,b+hit],[0,0],"black",2,[-1,0])
+    a.addLine([-1,hit*1.5],[0,0],"black")
+    a.addLine([hit-margins,hit+margins],[0,0],"black",2,[-1,0])
 
     while True:
-        amplitude=float(input("amplitud: "))
+        amplitude=float(input("\namplitud: "))
         #angel=aime(estimate,amplitude,k,m,b,hit)#estimate,amplitude,k,m,goal,margin
         angel=input("vinkel grader: ")
         try:
@@ -186,17 +188,15 @@ def gameInit(estimate,h): #estimate är uppskattningen med estimate(x speed when
         except:
             print("Kan inte konvergera",angel,"till en siffra.")
             continue
-        print()
+        
         
         x,y,itera=estimate(amplitude*math.cos(angel),amplitude*math.sin(angel),k,m,h)
     
         a.addLine(x,y,"green","x",[-1])
     
-        if (b-hit<=x[-1]<=b+hit):
+        if (hit-margins<=x[-1]<=hit+margins):
             print("you win!")
-            #a.clear()
-            #plt.close()
             break
 
-gameInit(euler_b,0.01)
+menu()
     
