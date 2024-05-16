@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib . pyplot as plt
 import math
 import random
+import numpy
 
 
 class plot:
@@ -104,7 +105,6 @@ def aime(estimate,amplitude,k,m,goal,margin):
     
     low=0
     high=90
-    mid=(high+low)/2
     
     
     x_low,y=estimate(amplitude*math.cos(math.radians(low)),amplitude*math.sin(math.radians(low)),k,m,h)
@@ -118,30 +118,22 @@ def aime(estimate,amplitude,k,m,goal,margin):
     if x_low[-1]>=(goal-margin) and x_low[-1]<=(goal+margin):
         return low
 
-    #Find positive value for x[-1]-goal
-    
     i=0
     while i<40:
+        mid=(high+low)/2
+        
         x_mid,y=estimate(amplitude*math.cos(math.radians(mid)),amplitude*math.sin(math.radians(mid)),k,m,h)
         x_midDiff=(x_mid[-1]-goal)
-        
         #testa mid
-        if x_midDiff>-margin and x_midDiff<margin:
+        if x_midDiff>=-margin and x_midDiff<=margin:
             return mid
 
         #bifeciton
-        if (x_midDiff)*(x_lowDiff)<0:
-            high=mid
-            x_highDiff=x_midDiff
-        else:
-            low=mid
-            x_lowDiff=x_midDiff
-            
-        mid=(high-low)/2
+        
+        
         i+=1
     #Lyckas inte hitta!
-    print("miss!")
-    return random.random()*180
+    return None
     
 
 def gameInit(estimate,h): #estimate är uppskattningen med estimate(x speed when t=0,y speed when t=0,k,m,steglängd)
@@ -158,13 +150,12 @@ def gameInit(estimate,h): #estimate är uppskattningen med estimate(x speed when
 
     while True:
         amplitude=float(input("amplitud: "))
-        angel=aime(estimate,amplitude,k,m,b,hit)#estimate,amplitude,k,m,goal,margin
-        print(angel)
+        #angel=aime(estimate,amplitude,k,m,b,hit)#estimate,amplitude,k,m,goal,margin
+        angel=input("vinkel grader: ")
         try:
-            angel=math.radians(angel)
-            #angel=math.radians(float(input("vinkel grader: ")))
+            angel=math.radians(float(angel))
         except:
-            print("Flyttals fel")
+            print("Kan inte konvergera",angel,"till en siffra.")
             continue
         print()
         
