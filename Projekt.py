@@ -56,7 +56,7 @@ def euler_f(v_x,v_y,k,m,t):
     y_points = np.array([])
     counter = 5
     itera = 0
-    while   state_vector[3] >= -1 :
+    while   state_vector[3] >= 0 :
         itera += 1
         x_points = np.append(x_points,state_vector[2])
 
