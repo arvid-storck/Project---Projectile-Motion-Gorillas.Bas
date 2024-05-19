@@ -1,0 +1,74 @@
+import matplotlib . pyplot as plt
+import math
+from project import aim_sugest, euler_f, euler_b
+
+def main():
+    
+    target = 30
+    k = 0.1
+    m = 10
+    t = 0.1
+    error_margin = 1
+    
+    method_choice = input(
+        "Enter the euler method by typing 1 for forward' or 2 for 'backward'): ")
+    V_x = float(input("Enter the first speed vector Vx: ").strip())
+    V_y = float(input("Enter the second speed vector Vy ").strip())
+    
+    if method_choice == "1":
+        
+        x,y = euler_f(V_x, V_y, k, m, t)
+        plt.plot(x,y)
+        plt.plot(target, 0, 'ro')
+        plt.show()
+        
+        if error_margin > abs(target - x[-1]):
+            print("You won!")
+        else:
+            input_2 = input("You missed, type 1 to get a suggestion for a better \
+                            Vx gues or type 2 for a better y gues, type \
+                                3 to exit :")
+            if input_2 == "1":
+                print("Choose Vx to :" + str(aim_sugest(target, euler_f,
+                                                        error_margin,
+                                                        V_y = V_y, 
+                                                        k= k, 
+                                                        m=m, 
+                                                        t=t)))
+            elif input_2 == "2":
+                print("Choose Vy to :"+ str(aim_sugest(target,
+                                 euler_f,
+                                 error_margin,
+                                 V_x = V_x,
+                                 k= k, 
+                                 m=m, 
+                                 t=t)))
+            
+        
+    elif method_choice == "2":
+        
+        x,y = euler_b(V_x, V_y, k ,m ,t)
+        plt.plot(x,y)
+        plt.plot(target, 0, 'ro')
+        plt.show()
+        
+        if error_margin > abs(target - x[-1]):
+            print("You won!")
+        else:
+            input_2 = input("You missed, type 1 to get a suggestion for a better Vx gues or type 2 for a better y gues, type 3 to exit")
+            if input_2 == "1":
+                print("Choose Vx to :" + str(aim_sugest(target, euler_f,
+                                                        error_margin,
+                                                        V_y = V_y, 
+                                                        k= k, 
+                                                        m=m, 
+                                                        t=t)))
+            elif input_2 == "2":
+                print("Choose Vy to :" + str (aim_sugest(target, euler_f,
+                                                         error_margin, 
+                                                         V_x = V_x, 
+                                                         k= k, 
+                                                         m=m, 
+                                                         t=t)))
+
+main()
