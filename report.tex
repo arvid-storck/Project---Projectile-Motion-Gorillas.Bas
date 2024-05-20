@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
 \graphicspath{ {./images/} }
+\usepackage{subcaption}
 
 \title{Project - Projectile Motion}
 \author{Emilio (Efternamn) and Arvid Storck}
@@ -10,9 +11,24 @@
 
 \maketitle
 \section{Introduction}
-We have four differential $m\frac{dv_x}{dt}=-kv_x$, $m\frac{dv_y}{dt}=-kv_x-mg$, $\frac{dx}{dt}=v_x$ and $\frac{dy}{dt}=v_y$. We want to solve them for x and y to find the time when y reaches 0 and plot x and y to try to hit a target we define. This we have done using Euler forward and Euler backwards.
+We have four differential $m\frac{dv_x}{dt}=-kv_x$, $m\frac{dv_y}{dt}=-kv_x-mg$, $\frac{dx}{dt}=v_x$ and $\frac{dy}{dt}=v_y$ where k is wind resistance and m is mass. We want to solve them for x and y to find the time when y reaches 0 and plot x and y to try to hit a target we define. This we have done using Euler forward and Euler backwards.
 
+\begin{figure}[h]
 
+\begin{subfigure}{0.45\textwidth}
+\includegraphics[width=0.9\linewidth]{Miss-Vx12-Vy10-taget30-k0.1-m10-t0.01-err1} 
+\caption{A Miss, using the values $v_x=12$\\ and $v_y=10$\\ }
+\label{fig:subim1}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+\includegraphics[width=0.9\linewidth]{Traff-Vx14.892578125-Vy10-taget30-k0.1-m10-t0.01-err1}
+\caption{A Hit, using the values\\ $v_x\approx14.892578125$ and $v_y=10$.\\$v_x$ found using the aim\_assist function}
+\label{fig:subim2}
+\end{subfigure}
+
+\caption{An example of the game with the values k=0.1, m=10, t=0.01\\ and error\_margin=1}
+\label{fig:image2}
+\end{figure}
 
 \section{Stability of Euler forward}
 
@@ -39,5 +55,5 @@ In this project we use two methods of approximating the resulting x and y positi
 
 We know that since both have the same local truncation error of O(h) that given step size h so that both are stable the error should be about the same with differences only being the implementation and how it works with the ODE. But when we talk about needing a larger step size to save time. For example if we use Euler forward and it lands at $x=10^9$ will require a allot of steps that's not necessary for precision but only the stability of the method. This is not a problem we will have if we chose Euler backwards that's stable for all h unless $v_{x_{n+1}}$ always grows regardless of h.
 
-%Numerical result, kanske tid och steglängd med hänsyn till stabiltiet.
+An example we can take is assuming we want to hit a target at about $x=10^9$. Given that we have the values k=0.1 and m=1 then the speed we will need be about $v_x=v_y=10^8$. Using Euler forward with a step size of h=0.01 will not be realistic since computing that will take more time then at least 10 min (i did not test any longer) using our method for Euler forward and Euler backwards. So we set the step size to h=300 to make the program run faster. But now Euler forward is unstable will result in either nonsense and take about same time as Euler forward or will now work at all depending on the implementation. But using Euler Backwards for my laptop took 1.62 seconds and we can still make that even faster by sacrificing the precision even further. That is possible since Euler backwards is stable for any values of h.
 \end{document}
