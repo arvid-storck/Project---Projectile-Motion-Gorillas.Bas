@@ -37,9 +37,9 @@ def main():
         print("Failed at converting to float")
         return None
     
-    aaaaa= time.time()
+    start_time = time.time()
     x,y = algoritm(V_x, V_y, k, m, t)
-    print(time.time()-aaaaa)
+    print(time.time()-start_time)
     plot(x,y,target)
     
     
