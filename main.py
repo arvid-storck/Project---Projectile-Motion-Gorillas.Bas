@@ -2,7 +2,6 @@ import matplotlib . pyplot as plt
 import math
 from functions import aim_assist, euler_f, euler_b
 
-import time
 
 def plot(x,y,target):
     plt.axhline(0,color='black')
@@ -34,12 +33,11 @@ def main():
         V_x = float(input("\nEnter the first speed vector Vx: ").strip())
         V_y = float(input("Enter the second speed vector Vy: ").strip())
     except:
-        print("Failed at converting to float")
+        print("Failed at converting string to float")
         return None
+
     
-    start_time = time.time()
     x,y = algoritm(V_x, V_y, k, m, t)
-    print(time.time()-start_time)
     plot(x,y,target)
     
     

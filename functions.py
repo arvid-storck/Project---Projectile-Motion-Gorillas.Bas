@@ -24,12 +24,6 @@ def euler_f(v_x,v_y, k = 0.1, m = 10, t = 0.01):
         state_vector = np.matmul(euler_matrix,state_vector) + t*f 
         #print(state_vector)
     
-    # crops to keep the last x,y pair with negative y while only.
-    for i in range(len(y_points)):
-        if y_points[i] < 0:
-            y_points = y_points[:i]
-            x_points = x_points[:i]
-            break
     return x_points, y_points
 
 
@@ -51,16 +45,13 @@ def euler_b(v_x,v_y, k = 0.1, m = 10, t = 0.01):
                                  [0,1/(1+t*k/m),0,0],
                                  [t/(1+t*k/m),0,1,0],
                                  [0,t/(1+t*k/m),0,1]])
-        state_vector = np.matmul(euler_matrix,state_vector) + t*f 
-        #print(state_vector)
-    
-    for i in range (len(y_points)):
-        if y_points[i] < 0:
-            y_points = y_points[:i]
-            x_points = x_points[:i]
-            break
+        state_vector = np.matmul(euler_matrix,state_vector) + t*f
     return x_points, y_points
 
+#This funktions assume that given a vector V_x (or V_y) that x_points[-1] will hit at or past the taget with the values V_y=1000 (V_x=1000)
+#If V_x=0.0001, will any values of V_y make x_points[-1] converge to the taget?
+#Another way could be to use angels or change both values. Angels will work since we have an minimum and an maximum. Just have to check if it will reach the taget at all.
+#Changing both values will work since increasing the speed equaly till hit given its fast enouth.
 def aim_assist(hit, method, error,V_x = 0,V_y = 0, k = 0.1, m = 10, t = 0.01):
     
     if V_x == 0:
@@ -77,8 +68,9 @@ def bisect_x(hit, method, error, V_x = 0, V_y = 0, a = 0, k = 0.1, m = 10, t = 0
     b = V_x
     c = (b + a)/2
     estimate = method(c, V_y, k, m ,t)[0][-1] 
-    
-    while abs(estimate - hit) > error/10: 
+
+    i=0
+    while abs(estimate - hit) > error/10 and i<50: 
         
         if estimate < hit - error/10:
             a = c
@@ -87,7 +79,8 @@ def bisect_x(hit, method, error, V_x = 0, V_y = 0, a = 0, k = 0.1, m = 10, t = 0
 
         c = (b + a)/2
         estimate = method(c, V_y, k, m ,t)[0][-1] 
-        
+
+        i+=1
     return c
     
 def bisect_y(hit, method, error, V_x = 0, V_y = 0, a = 0, k = 0.1, m = 10, t = 0.01):
@@ -95,8 +88,9 @@ def bisect_y(hit, method, error, V_x = 0, V_y = 0, a = 0, k = 0.1, m = 10, t = 0
     b = V_y
     c = (b + a)/2
     estimate = method(V_x, c, k ,m, t)[0][-1] 
-    
-    while abs(estimate - hit) > error/10: 
+
+    i=0
+    while abs(estimate - hit) > error/10 and i<50: 
         
         if estimate < hit - error/10:
             a = c
@@ -104,7 +98,9 @@ def bisect_y(hit, method, error, V_x = 0, V_y = 0, a = 0, k = 0.1, m = 10, t = 0
             b = c
 
         c = (b + a)/2
-        estimate = method(V_x, c, k ,m ,t)[0][-1] 
+        estimate = method(V_x, c, k ,m ,t)[0][-1]
+
+        i+=1
         
     return c
     
