@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\graphicspath{ {./images/} }
+
+\title{Project - Projectile Motion}
+\author{Emilio (Efternamn) and Arvid Storck}
+\date{May 2024}
+
+\begin{document}
+
+\maketitle
+\section{Introduction}
+We have four differential $m\frac{dv_x}{dt}=-kv_x$, $m\frac{dv_y}{dt}=-kv_x-mg$, $\frac{dx}{dt}=v_x$ and $\frac{dy}{dt}=v_y$. We want to solve them for x and y to find the time when y reaches 0 and plot x and y to try to hit a target we define. This we have done using Euler forward and Euler backwards.
+
+
+
+\section{Stability of Euler forward}
+
+To find for what step size h is stable with any ODE approximations in regards to the x axis we need to isolate the first derivative in the form of $\frac{dv_x}{dt}=f(v_x,t)\newline\newline$
+$m\frac{dv_x}{dt}=-kv_x\Rightarrow$
+$\frac{dv_x}{dt}=-\frac{k}{m}*v_x\equiv f(v_x,t)\newline\newline$
+We now choose Euler forward as the method and input the formula.
+
+$v_{x_{n+1}}\approx v_{x_{n}}+h*f(v_{x_{n}},t_n)=v_{x_{n}}-\frac{hk}{m}*v_{x_{n}}=v_{x_{n}}(1-\frac{hk}{m})\newline\newline$
+The method is stable if the next approximate value is smaller or equal then the next so if $v_{x_{n+1}}=v_{x_{n}}*\alpha$ then $|\alpha|\le 1$ for the method to be stable. In our case we have that $|1-\frac{hk}{m}|\le 1\newline\newline$
+We now have two cases to consider.
+
+Case 1: $1-\frac{hk}{m}\le 1\Rightarrow 0\le h$
+
+Case 2: $\frac{hk}{m}-1\le 1\Rightarrow h\le \frac{2m}{k}\newline\newline$
+Since case 1 is always true we use case 2 to see that approximating the differential equation $m\frac{dv_x}{dt}=-kv_x$ using Euler forwards, h it is stable when $h\le \frac{2m}{k}.\newline\newline$
+We can now see that if we half k (air resistance) then the maximum step size we can have and still be stable will be double.
+
+\section{Specification of A and f}
+%Jag kan inte skriva detta tyvärr
+
+\section{Comparison of methods}
+In this project we use two methods of approximating the resulting x and y position, Euler forward and Euler backwards.
+
+We know that since both have the same local truncation error of O(h) that given step size h so that both are stable the error should be about the same with differences only being the implementation and how it works with the ODE. But when we talk about needing a larger step size to save time. For example if we use Euler forward and it lands at $x=10^9$ will require a allot of steps that's not necessary for precision but only the stability of the method. This is not a problem we will have if we chose Euler backwards that's stable for all h unless $v_{x_{n+1}}$ always grows regardless of h.
+
+%Numerical result, kanske tid och steglängd med hänsyn till stabiltiet. Tyvär så förstår jag inte din kod så du får nog göra det.
+\end{document}

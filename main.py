@@ -2,11 +2,20 @@ import matplotlib . pyplot as plt
 import math
 from functions import aim_assist, euler_f, euler_b
 
+import time
+
+def plot(x,y,target):
+    plt.axhline(0,color='black')
+    plt.plot(target, 0, 'ro')
+    plt.plot(x,y,marker="3",markevery=[-1])
+    plt.show()
+
 def main():
+    
     
     target = 30
     k = 0.1
-    m = 10
+    m = 1
     t = 0.01
     error_margin = 1
     
@@ -22,39 +31,46 @@ def main():
         print("Not a valid input for method")
         return None
     try:
-        V_x = float(input("Enter the first speed vector Vx: ").strip())
+        V_x = float(input("\nEnter the first speed vector Vx: ").strip())
         V_y = float(input("Enter the second speed vector Vy: ").strip())
     except:
         print("Failed at converting to float")
+        return None
     
+    aaaaa= time.time()
     x,y = algoritm(V_x, V_y, k, m, t)
-    plt.axhline(0,color='black')
-    plt.plot(target, 0, 'ro')
-    plt.plot(x,y,marker="3",markevery=[-1])
-    plt.show()
+    print(time.time()-aaaaa)
+    plot(x,y,target)
+    
     
     if error_margin > abs(target - x[-1]):
         print("You won!")
     else:
-        input_2 = input("\nYou missed,\ntype 1 to get a suggestion for a better Vx value\n"+
-                        "type 2 for a better Vy value\n" \
-                        +"type 3 to exit\n")
+        input_2 = input("\nYou missed!\nType 1 to get a suggestion for a better Vx value\n"+
+                        "Type 2 for a better Vy value\n" \
+                        +"Type 3 to exit\n")
         if input_2 == "1":
-            print("\nChoose Vx to :" + str(aim_assist(target,
-                                                    algoritm,
-                                                    error_margin,
-                                                    V_y = V_y, 
-                                                    k= k, 
-                                                    m=m, 
-                                                    t=t)))
+            V_x=aim_assist(target,
+                          algoritm,
+                          error_margin,
+                          V_y = V_y,
+                          k= k,
+                          m=m,
+                          t=t)
+            print("\nSetting Vx to :" + str(V_x))
+            x,y = algoritm(V_x, V_y, k, m, t)
+            plot(x,y,target)
         elif input_2 == "2":
-            print("\nChoose Vy to :"+ str(aim_assist(target,
+            V_y=aim_assist(target,
                              algoritm,
                              error_margin,
                              V_x = V_x,
                              k= k, 
                              m=m, 
-                             t=t)))
+                             t=t)
+            print("\nSetting Vy to :"+ str(V_y))
+            x,y = algoritm(V_x, V_y, k, m, t)
+            plot(x,y,target)
         else:
             print("\nGoodbye!")
 
