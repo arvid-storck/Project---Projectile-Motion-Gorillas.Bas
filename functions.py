@@ -11,7 +11,7 @@ def euler_f(v_x,v_y, k = 0.1, m = 10, t = 0.01):
     x_points = np.array([])
     y_points = np.array([])
 
-    while   state_vector[3] >= -1 :
+    while  state_vector[3] >= 0 :
 
         x_points = np.append(x_points,state_vector[2])
 
@@ -50,8 +50,10 @@ def euler_b(v_x,v_y, k = 0.1, m = 10, t = 0.01):
 
 #This funktions assume that given a the value V_x (or V_y) that x_points[-1] will hit at or past the taget with the value V_y=1000 (V_x=1000)
 #If V_x=0.0001, will any values of V_y make x_points[-1] converge to the taget?
-#Another way could be to use angels or change both values. Angels will work since we have an minimum and an maximum. Just have to check if it will reach the taget at all.
-#Changing both values will work since increasing the speed equaly till hit given its fast enough.
+#If the error is low then we can get problems with rounding errors, but that will happen with any use of the bisektion method
+#Another way could be to use angels. Angels will work since we have an minimum and an maximum.
+#Just have to check if it will reach the taget at all this can be done.
+#Changing both speed values will work since increasing the speed equaly will hit given its fast enough.
 def aim_assist(hit, method, error,V_x = 0,V_y = 0, k = 0.1, m = 10, t = 0.01):
     
     if V_x == 0:
@@ -70,7 +72,7 @@ def bisect_x(hit, method, error, V_x = 0, V_y = 0, a = 0, k = 0.1, m = 10, t = 0
     estimate = method(c, V_y, k, m ,t)[0][-1] 
 
     i=0
-    while abs(estimate - hit) > error/10 and i<50: 
+    while abs(estimate - hit) > error/10 and i<100: 
         
         if estimate < hit - error/10:
             a = c
@@ -90,7 +92,7 @@ def bisect_y(hit, method, error, V_x = 0, V_y = 0, a = 0, k = 0.1, m = 10, t = 0
     estimate = method(V_x, c, k ,m, t)[0][-1] 
 
     i=0
-    while abs(estimate - hit) > error/10 and i<50: 
+    while abs(estimate - hit) > error/10 and i<100: 
         
         if estimate < hit - error/10:
             a = c
