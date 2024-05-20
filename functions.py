@@ -51,7 +51,7 @@ def euler_b(v_x,v_y, k = 0.1, m = 10, t = 0.01):
 #This funktions assume that given a vector V_x (or V_y) that x_points[-1] will hit at or past the taget with the values V_y=1000 (V_x=1000)
 #If V_x=0.0001, will any values of V_y make x_points[-1] converge to the taget?
 #Another way could be to use angels or change both values. Angels will work since we have an minimum and an maximum. Just have to check if it will reach the taget at all.
-#Changing both values will work since increasing the speed equaly till hit given its fast enouth.
+#Changing both values will work since increasing the speed equaly till hit given its fast enough.
 def aim_assist(hit, method, error,V_x = 0,V_y = 0, k = 0.1, m = 10, t = 0.01):
     
     if V_x == 0:
