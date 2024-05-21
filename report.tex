@@ -3,11 +3,12 @@
 \graphicspath{ {./images/} }
 \usepackage{subcaption}
 \usepackage{titling}
+\usepackage{amsmath}
 
 \setlength{\droptitle}{-7em}
 
 \title{Project - Projectile Motion}
-\author{Emilio (Efternamn) and Arvid Storck}
+\author{Emilio Otero Johansson and Arvid Storck}
 \date{May 2024}
 
 \begin{document}
@@ -51,7 +52,22 @@ Since case 1 is always true we use case 2 to see that approximating the differen
 We can now see that if we half k (air resistance) then the maximum step size we can have and still be stable will be double.
 
 \section{Specification of A and f}
-%Jag kan inte skriva detta tyvärr
+\[
+A = \begin{pmatrix}
+1-\frac{tk}{m} & 0 & 0 & 0 \\
+0 & 1-\frac{tk}{m} & 0 & 0 \\
+t & 0 & 1 & 0 \\
+0 & t & 0 & 1
+\end{pmatrix}
+\]
+\[
+f = \begin{pmatrix}
+0 \\
+-g  \\
+0  \\
+0 
+\end{pmatrix}
+\]
 
 \section{Comparison of methods}
 In this project we use two methods of approximating the resulting x and y position, Euler forward and Euler backwards.
